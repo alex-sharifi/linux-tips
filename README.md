@@ -1,11 +1,6 @@
-Most commands are often followed by options that modify command behaviour, and further by one or more arguments, the items upon which the command acts.
+Most commands are often followed by options that modify command behaviour, and further by one or more arguments, the items upon which the command acts. So most commands look like this:
 
-# Wildcards
-
-- `*` matches any characters.
-- `?` matches any single character.
-- `[characters]` matches any character that is a member of the set of `characters`.
-- Wildcards always expand in sorted order.<sup>pg 54</sup>
+`command -option[s] argument[s]`
 
 # What are Commands?
 
@@ -13,7 +8,18 @@ Most commands are often followed by options that modify command behaviour, and f
 - A *shell builtin*, commands built into the shell itself. i.e. `cd` is a shell builtin.
 - A *shell function*, miniature shell scripts incorporated into the environment.
 - An *alias*, commands we define ourselves, built from other commands.
-- When square brackets appear in the description of a command's syntax, they indicate optional items. A vertical bar indicates mutually exclusive items.
+
+When square brackets appear in the description of a command's syntax, they indicate optional items. A vertical bar indicates mutually exclusive items.
+
+# Wildcards
+
+Because the shell uses filenames so much, it provides special characters to help you rapidly specify groups of filenames.
+
+- `*` matches any characters, i.e. `*` matches all files, or `g*.txt` matches any file beginning with _g_ followed by any characters and ending with _.txt_.
+- `?` matches any single character, i.e. `Data???` matches any file beginning with _Data_ followed by exactly three characters.
+- `[characters]` matches any character that is a member of the set of `characters`.
+- `[!characters]` matches any character that is not a member of the set of `characters`.
+- Wildcards always expand in sorted order.<sup>pg 54</sup>
 
 # Useful Linux Commands
 
@@ -23,10 +29,21 @@ Most commands are often followed by options that modify command behaviour, and f
 
 - Navigation
   - `cd `  changes the working directory to your home directory.
-  - `cd -` changes the working directory to the previous working directory.
+    - `cd -` changes the working directory to the previous working directory.
+
+- Expansions
+  - Using wildcards expands into matching filenames or directories.
+  - `~`, or _tilde expansion_ expands into the name of the home directory of the named user, or if no user is named, the current user, i.e. `cd ~foo`.
+  - `${parameter}` for _parameter expansion_. `printenv` shows a list of available variables.
+  - `$(command)` for _command substitution_. Allows us to use the output of a command as an expansion, i.e. `echo $(ls)`
+    - Double quotes causes all special characters to lose meaning, _except for_ `$`, `\`` and `\\` (so word splitting, pathname expansion, tilde expansion and brace expansion are supressed). We can use an _escape character_ `\\` to supress a single special character.
+    - Single quotes supresses _all expansions_.
+  - `$((expression))` for arithmetic expansion, but only supports integers.
+  - `{}` for _brace expansion_, i.e. `echo {A,B,C}`, `echo {A..K}`, `echo {Q..F}`, `echo {1..10}`, `echo {001..100}`, `echo a{A{1,2},B{3,4}}b`.
 
 - Exploring the system
   - `file` describes a file.
+    - `file -i` gives more information about the file.
   - `ls` lists files in a directory.
     - `ls -d` ordinarily if a directory is specified `ls` will list the contents of the directory, not the directory itself. The `-l` option shows details about the directory rather than its contents.
     - `ls -h` displays file sizes in human-readable format.
