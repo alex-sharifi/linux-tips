@@ -28,8 +28,12 @@ Because the shell uses filenames so much, it provides special characters to help
   - `cal` for a nice calendar.
 
 - Navigation
+  - `CTRL-A` moves cursor to the beginning of the line; `CTRL-E` moves cursor to the end of the line.
+  - `CTRL-D` deletes the character at the cursor position.
+  - `CTRL-K` cuts text from the cursor location to the end of the the line.
   - `cd `  changes the working directory to your home directory.
     - `cd -` changes the working directory to the previous working directory.
+  - `history` stores the last 1000 commands. Commonly used as `history | grep filter`.
 
 - Expansions
   - Using wildcards expands into matching filenames or directories.
@@ -41,15 +45,16 @@ Because the shell uses filenames so much, it provides special characters to help
   - `$((expression))` for arithmetic expansion, but only supports integers.
   - `{}` for _brace expansion_, i.e. `echo {A,B,C}`, `echo {A..K}`, `echo {Q..F}`, `echo {1..10}`, `echo {001..100}`, `echo a{A{1,2},B{3,4}}b`.
 
-- Exploring the system
+- Exploring the System
   - `file` describes a file.
     - `file -i` gives more information about the file.
   - `ls` lists files in a directory.
     - `ls -d` ordinarily if a directory is specified `ls` will list the contents of the directory, not the directory itself. The `-l` option shows details about the directory rather than its contents.
     - `ls -h` displays file sizes in human-readable format.
+    - `ls -l` displays in long format. The first part is access rights for the file. The second part is number of hard links. The third part is the username of the file's owner. The fourth part is the username of the file's owner. The fifth part is the name of the group that owns the file. The sixth part is size of the file in bytes. The seventh part is the date and time of the last modified date. The eighth part is the name of the file.
 
 - Manipulating Files and Directories
-  - `ln -s item symlink-name` creates a symbolic link to a file. Directory listings begin with a `l`
+  - `ln -s item symlink-name` creates a symbolic link to a file. Directory listings begin with a `l`. Symbolic links are identified with the _l_ attribute in the file attributes.
 
 - Working With Commands
   - `which` determines the exact location of a given executable, useful if there is more than one version of an executable program installed on a system.
@@ -75,3 +80,35 @@ Because the shell uses filenames so much, it provides special characters to help
   - `&&`, i.e. `command1 && command2` executes _command1_, and _command2_ is executed if _command1_ is successful.
   - `||`, i.e. `command1 || command2` executes _command2_ if _command1_ is unsuccessful.
   - `;`, i.e. `command1; command2; command3;...` sequences commands but not not rely on the previous command to be successful for subsequent commands to be executed.
+
+- Environment
+  - `printenv` displays what has been stored in the environment variables.
+  - `set` builtin displays what has been stored in the shell and environment variables, as well as any defined shell functions.
+  - `printenv [var]` or `echo ${var}` displays the value of a specific variable.
+  - The `~/.bashrc` file is a user's personal startup file. It can be used to extend or override settings in the global configuration script.
+    - The `PATH` variable provides a list of directories to search for commands. It can be extended to include additional paths by `export PATH="${HOME}"/bin:"${PATH}"`. To add directores to your `PATH` or define additional environment variables, place the changes in the `~/.bashrc` file.
+    - The `PS1` variable ('prompt string 1') defines how the prompt string looks. You can use various escape codes to set values and colours.
+  - `export VAR=VAL` tells the shell to make the contents of _VAR_ available to child processes of this shell.
+  - `source [file]` forces bash to read the shell script in [file].
+
+- Permissions
+  - Modern Linux practise is to create a unique, single-member group with the same name as the user.
+  - `chmod` changes _file mode_. Only file's owner or the superuser can change the mode of a file or directory. `chmod 755 file` is common because it gives Owner read/write/execute permissions, and Group and World read/execute permissions.
+  - `umask` sets the default file permissions.
+  - `su [user]` starts a shell as another user.
+    - `su -l [user]` loads the user's environment and changes the working directory to the user's home directory. You will often see this as `su -` because the _l_ letter is not required, and if the user is not specified, superuser is assumed.
+    - `su -c 'command' [user]` executes a single command rather than starting an interactive shell.
+    - `sudo` allows ordinary users to execute commands as a different user (usually the superuser) in a controlled way, and does not require access to the superuser's password but requires the user's own password. `sudo -i` starts an interactive superuser session. `sudo -l` lists superuser privileges granted by `sudo`.
+  - `chown` changes Owner and Group of a file or directory (superuser privileges required).
+    - `chown [owner][:[group]] file...` changes ownership of `file` from its current owner to the user `[owner]`
+  - Common permissions sequence is: `chown user file; chmod 700 file`
+
+- Processes
+  - `ps` views processes. `ps a` is a common way of running the `ps` command.
+  - `top` displays a continuously updating display of system processes.
+  - `CTRL-C` _interrupts_ a program. 
+  - `command &` puts a process in the background and is immune from terminal keyboard input, including any attempt to interrupt it with `CTRL-C`.
+  - `jobs` lists jobs that have been launched from the terminal.
+  - `fg` returns a process to the foreground, or `fg %[job number]` if there is more than one job.
+  - `bg` moves a process back into the background, or `bg %[job number]` if there is more than one job.
+  - `kill -signal [job number]` terminates processes that need killing.
