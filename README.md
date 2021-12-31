@@ -23,9 +23,17 @@ Because the shell uses filenames so much, it provides special characters to help
 
 # Useful Linux Commands
 
-- Date and Calendar
+- Utilities
   - `date` for current date and time.
   - `cal` for a nice calendar.
+  - `free` displays the amount of free memory.
+  - `df` displays hthe amount of free space on our disk drives.
+  - `sed` does find and replace on text. Format is `sed 's/regexp/replacement/g/ [file]`
+    - The _g_ flag changes all instances if there are multiple matches.
+    - Back references can be used with \{_n_} (where _n_ is a number) to substitue the corresponding subexpression in the preceding regular expression.
+    - `sed -f [sed-file] [file]` references a `sed` expression from a saved file.
+    - `sed -i` edits the file in place, meaning that rather than sending the edited output to _stdout_, it will rewrite the file with the changes applied.
+    - `sed 's/regexp/replacement/g/; s/regexp/replacement/g/' [file]` places more than one editing command on the line by separating them with a semicolon.
 
 - Navigation
   - `CTRL-A` moves cursor to the beginning of the line; `CTRL-E` moves cursor to the end of the line.
@@ -62,9 +70,15 @@ Because the shell uses filenames so much, it provides special characters to help
   - `alias _name_='_string_'` assigns a command(s) to an alias. `alias` lists all current aliases. `unalias _alias_` unassigns an alias.
 
 - Finding Stuff
-  - `grep` prints out the lines containing a pattern in a file, i.e. `grep pattern filename`.
+  - `grep` prints out the lines containing a pattern in a file, i.e. `grep [options] regex [file...]`.
+    - `grep -E` enables extended regular expression support.
     - `grep -i` causes `grep` to ignore case.
-    - `grep -v` causes `grep` to print only lines that do not match the pattern
+    - `grep -v` causes `grep` to print only lines that do not match the pattern.
+  - `find` is given one or more names of directories to search.
+    - `find ~` produces a listing of our home directory.
+    - `find [directory] -type d` lists only directories, `find [directory] -type f` lists only files.
+    - `find [directory] -type f -name "*.JPG"` lists files ending in _.JPG_. Notice how the value of the _-name_ option is enclosed in quotes to suppress pathname expansion.
+    - `find [directory] -type f -not -perm 0600` uses a _logical operator_ to filter results further. Note `-and` is implied by default when no operator is present.
 
 - Redirection
   - I/O redirection allows us to change where input comes from and output goes. Normally standard input (_stdin_) comes from the keyboard and standard output (_stdout_) goes to the screen.
@@ -73,8 +87,11 @@ Because the shell uses filenames so much, it provides special characters to help
   - `&>` or `>` followed by `2>&1` redirects _stdout_ and _stderr_ to one file.
   - `1>` redirects _stdin_, `2>` redirects _stderr_.
   - `tee` sends results to another file, and _stdout_, i.e. `tee file`
-  - `<` changes the source of _stdin_ from the keyboard to an input file.
   - `|` connects the standard output of one command into the standard input of a second command, i.e. `command1 | command2 | command3`.
+  - `<` changes the source of _stdin_ from the keyboard to an input file.
+  - `command << token
+     text
+     token` is a _here document_, where _command_ is the name of a command that accepts _stdin_, and `token` is frequently _EOF_.
 
 - Control Operators
   - `&&`, i.e. `command1 && command2` executes _command1_, and _command2_ is executed if _command1_ is successful.
@@ -88,8 +105,11 @@ Because the shell uses filenames so much, it provides special characters to help
   - The `~/.bashrc` file is a user's personal startup file. It can be used to extend or override settings in the global configuration script.
     - The `PATH` variable provides a list of directories to search for commands. It can be extended to include additional paths by `export PATH="${HOME}"/bin:"${PATH}"`. To add directores to your `PATH` or define additional environment variables, place the changes in the `~/.bashrc` file.
     - The `PS1` variable ('prompt string 1') defines how the prompt string looks. You can use various escape codes to set values and colours.
-  - `export VAR=VAL` tells the shell to make the contents of _VAR_ available to child processes of this shell.
+  - `variable=value` is how variables are assigned.
+    - `declare -r VAR=VAL` defines a variable with constraints.
+    - `export VAR=VAL` tells the shell to make the contents of _VAR_ available to child processes of this shell.
   - `source [file]` forces bash to read the shell script in [file].
+    - The dot `.` command is a synonym for the `source` command, a shell builtin that reads a specified file of shell commands and treats it like input from the keyboard.
 
 - Permissions
   - Modern Linux practise is to create a unique, single-member group with the same name as the user.
@@ -112,3 +132,44 @@ Because the shell uses filenames so much, it provides special characters to help
   - `fg` returns a process to the foreground, or `fg %[job number]` if there is more than one job.
   - `bg` moves a process back into the background, or `bg %[job number]` if there is more than one job.
   - `kill -signal [job number]` terminates processes that need killing.
+
+- Networking
+  - `ip a` examines the system's network intefaces and routing table.
+  - `ssh` encrypts all of the communications between the local and remote hosts.
+    - `ssh` allows us to execute a single command on a remote system and have the results displayed on the local system, i.e. `ssh remote-sys 'command'`.
+  - `sftp` allows for file transfer from remote servers. Does not require an FTP server to be running on the remote host, only the SSH server.
+
+- Archiving
+  - `gzip` compresses one or more files, and replaces the original version with the compressed version of the original.
+    - `gzip -c` writes output the standard output and keeps the original file.
+    - `gzip -d` decompresses the file.
+  - `tar` is the classic tool for archiving files. Format is `tar mode[options] pathname...`
+    - `tar c` creates an archive from a list of files/directories.
+    - `tar x` extracts an archive.
+    - `tar t` lists the contents of an archive.
+    - `tar cf [name] pathname` specifies the name of the tar archive, but the mode must always be specified first, before any other option.
+    - `tar [mode]f -` redirects to standard input/output.
+    - `tar [mode]f -T=-` causes `tar` to read its list of pathnames from a file rather than the command line.
+    - `tar xf [name].tar pathname` limits the extraction to a single file from an archive.
+    - Extraction is relative to the pathname rather than absolute, so it often makes sense to change directory to `/` so that extraction is relative to the root directory.
+
+- Building Environments
+  - `make` describes relationships and dependencies among the components that comprise a finished program. The `make` program can be used for any task that needs to maintain a target/dependency relationship, not just for compiling source code.
+  - Takes a _Makefile_ as input, but `make` command only needs to be run.
+  - Most of the _Makefile_ consists of lines that define a _target_, and the files on which is it _dependent_. The remaining lines describe the commands needed to create the target from its components.
+
+- Shell Scripts
+  - Carry out the commands as though they have been entered directly on the command line.
+  - Shell is unique in that is is both a command line interface to the system and a scripting language interpreter.
+  - Steps to create and run a script:
+    - Write a script.
+    - `chmod 755 [file]` to set permissions to allow execution.
+    - `export PATH="${HOME}"/bin:"${PATH}"` or `mv [file]` to a location in the PATH variable.
+      - Otherwise you have to run the command from the directory in which the script is saved, but that is not very convenient. A good location for scripts is `~/bin` for personal use, or `/usr/local/bin` for scripts for everyone on a system to use.
+  - `function name {
+      commands
+      return
+     }` is the syntax for a function.
+    - Shell functions make excellent replacements for aliases and are actually the preferred method of creating small commands for personal use.
+    - Shell functions must appear in the script before they are called.
+    - `local` defines a local variable, which precedes the variable name, i.e. `local foo; foo=2`
