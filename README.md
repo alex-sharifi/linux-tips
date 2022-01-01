@@ -51,6 +51,9 @@ Because the shell uses filenames so much, it provides special characters to help
   - Using wildcards expands into matching filenames or directories.
   - `~`, or _tilde expansion_ expands into the name of the home directory of the named user, or if no user is named, the current user, i.e. `cd ~foo`.
   - `${parameter}` for _parameter expansion_. `printenv` shows a list of available variables.
+    - `${parameter:-word}` is basically coalesce: if _parameter_ is not set, expansion results in the value of _word_. If _parameter_ is not empty, the expansion results in the value of _parameter_.
+    - `${#parameter}` expands into the length of the string contained by _parameter_.
+    - There are more of these types of expansions to manage empty variables.
   - `$(command)` for _command substitution_. Allows us to use the output of a command as an expansion, i.e. `echo $(ls)`
     - Double quotes causes all special characters to lose meaning, _except for_ `$`, `\`` and `\\` (so word splitting, pathname expansion, tilde expansion and brace expansion are supressed). We can use an _escape character_ `\\` to supress a single special character.
     - Single quotes supresses _all expansions_.
@@ -182,8 +185,11 @@ Because the shell uses filenames so much, it provides special characters to help
   - `read` is used to read a single line of _stdin_, either from the keyboard or redirected from a line of data from a file.
     - If no variables are listed after the `read` command, a shell variable `${REPLY}` will be assigned all the input.
     - There are various options for `read`, such as `read -p prompt` displays a _prompt_ for input; `read -t seconds` sets a timeout in _seconds_.
-  - `${1}..${n}` are positional parameters
+  - `${1}..${n}` are positional parameters.
     - `${0}` will always contain the first item appearing on the command line, which is the pathname of the command being executed.
+    - `${#}` contains the number of arguments on the command line.
+    - `${@}` expands into the list of positional parameters, starting with 1.
+    - `shift` command causes all the parameters to _move down one_, i.e. `while test "${#}" -gt 0; do commands shift done` or `while test -n "${1}"; do commands shift done`.
 
 - Flow Control: If
   - `if commands; then commands [elif commands; then commands...] [else commands] fi` is the format.
@@ -204,7 +210,10 @@ Because the shell uses filenames so much, it provides special characters to help
     - As long as a `test` command returns an exit status of 0, the commands within the loop are executed.
   - `break` immediately terminates a loop; `continue` causes the remainder of the loop to be skipped, and program control resumes with the next iteration of the loop.
   - `until` continues until it receives a non-zero exit status.
+  - `for variable in words; do commands done` is the _for_ syntax.
+    - Supports pathname expansion, i.e. `for i in distros*.txt; do ...`
+    - Alternative syntax is `for (( expression1; expression2; expression3 )); do commands done`
 
 - Flow Control: Branching
   - `case word in [pattern [| pattern]...) commands ;;]... esac`
-  - Patterns used by `case` are the same as those used by pathname expansion. 
+  - Patterns used by `case` are the same as those used by pathname expansion.
