@@ -24,6 +24,9 @@ Because the shell uses filenames so much, it provides special characters to help
 # Useful Linux Commands
 
 - Utilities
+  - `${?}` examines exit status (an integer ranging between 0 to 255) where 0 indicates success.
+    - Because it is a variable, remember to use it as `echo ${?}` otherwise the shell will return an error, trying to execute the value as a command.
+    - `true` command always executes successfully (exit status 0); the `false` command always executes unsuccessfully (exit status 1).
   - `date` for current date and time.
   - `cal` for a nice calendar.
   - `free` displays the amount of free memory.
@@ -34,6 +37,7 @@ Because the shell uses filenames so much, it provides special characters to help
     - `sed -f [sed-file] [file]` references a `sed` expression from a saved file.
     - `sed -i` edits the file in place, meaning that rather than sending the edited output to _stdout_, it will rewrite the file with the changes applied.
     - `sed 's/regexp/replacement/g/; s/regexp/replacement/g/' [file]` places more than one editing command on the line by separating them with a semicolon.
+  - `printf` does not accept _stdin_ but is given a string containing a format description, which is then applied to a list of arguments.
 
 - Navigation
   - `CTRL-A` moves cursor to the beginning of the line; `CTRL-E` moves cursor to the end of the line.
@@ -92,6 +96,7 @@ Because the shell uses filenames so much, it provides special characters to help
   - `command << token
      text
      token` is a _here document_, where _command_ is the name of a command that accepts _stdin_, and `token` is frequently _EOF_.
+  - `<<<` is a _here string_. Like a _here document_ but only consisting of a single line of input
 
 - Control Operators
   - `&&`, i.e. `command1 && command2` executes _command1_, and _command2_ is executed if _command1_ is successful.
@@ -173,3 +178,33 @@ Because the shell uses filenames so much, it provides special characters to help
     - Shell functions make excellent replacements for aliases and are actually the preferred method of creating small commands for personal use.
     - Shell functions must appear in the script before they are called.
     - `local` defines a local variable, which precedes the variable name, i.e. `local foo; foo=2`
+  - Shell functions can return an exit status by including an integer argument to the `return` command. The `exit` command accepts single optional argument which becomes the scripts exit status, used as a formality to terminate with the appropriate _exit_ code. But `return` does this too. Error messages should be redirected to _stderr_ with `>&2`.
+  - `read` is used to read a single line of _stdin_, either from the keyboard or redirected from a line of data from a file.
+    - If no variables are listed after the `read` command, a shell variable `${REPLY}` will be assigned all the input.
+    - There are various options for `read`, such as `read -p prompt` displays a _prompt_ for input; `read -t seconds` sets a timeout in _seconds_.
+  - `${1}..${n}` are positional parameters
+    - `${0}` will always contain the first item appearing on the command line, which is the pathname of the command being executed.
+
+- Flow Control: If
+  - `if commands; then commands [elif commands; then commands...] [else commands] fi` is the format.
+  - `test` performs checks and comparisons to return an exit status of 0 when the expression is true, and a status of 1 when an exit status is false.
+    - `test -e file` checks for presence of _file_.
+    - `test -d file` checks if _file_ exists and is a directory.
+    - `test string` checks if _string_ is not null.
+    - `test -n string` checks the length of _string_ is greater than 0.
+    - `test string1 == string2` checks if _string1_ and _string2_ are equal.
+    - `test string1 > string2` checks if _string1_ sorts after _string2_ (but remember to quote or escape '>' so it is not interpreted as a redirection operator)
+    - `test integer1 -eq integer2` checks if _integer1_ equals _integer2_.
+    - `test check1 -a check2` checks if _check1_ and _check2_ are both true.
+    - Since all expressions used by `test` are treated as command arguments by the shell (unlike `[[ ]]` and `(( ))`), characters that have special meaning to bash, such as `<`, `>`, `(` and `)` must be quoted or escaped.
+
+- Flow Control: Looping
+  - `while commands; do commands; done` is the format.
+    - Commonly used as `while test expr; do commands; done`.
+    - As long as a `test` command returns an exit status of 0, the commands within the loop are executed.
+  - `break` immediately terminates a loop; `continue` causes the remainder of the loop to be skipped, and program control resumes with the next iteration of the loop.
+  - `until` continues until it receives a non-zero exit status.
+
+- Flow Control: Branching
+  - `case word in [pattern [| pattern]...) commands ;;]... esac`
+  - Patterns used by `case` are the same as those used by pathname expansion. 
