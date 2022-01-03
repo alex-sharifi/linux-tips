@@ -55,7 +55,7 @@ Because the shell uses filenames so much, it provides special characters to help
     - `${#parameter}` expands into the length of the string contained by _parameter_.
     - There are more of these types of expansions to manage empty variables.
   - `$(command)` for _command substitution_. Allows us to use the output of a command as an expansion, i.e. `echo $(ls)`
-    - Double quotes causes all special characters to lose meaning, _except for_ `$`, `\`` and `\\` (so word splitting, pathname expansion, tilde expansion and brace expansion are supressed). We can use an _escape character_ `\\` to supress a single special character.
+    - Double quotes causes all special characters to lose meaning, _except for_ `$`, `backtick` and `\\` (so word splitting, pathname expansion, tilde expansion and brace expansion are supressed). We can use an _escape character_ `\\` to supress a single special character.
     - Single quotes supresses _all expansions_.
   - `$((expression))` for arithmetic expansion, but only supports integers.
   - `{}` for _brace expansion_, i.e. `echo {A,B,C}`, `echo {A..K}`, `echo {Q..F}`, `echo {1..10}`, `echo {001..100}`, `echo a{A{1,2},B{3,4}}b`.
@@ -146,6 +146,7 @@ Because the shell uses filenames so much, it provides special characters to help
   - `ssh` encrypts all of the communications between the local and remote hosts.
     - `ssh` allows us to execute a single command on a remote system and have the results displayed on the local system, i.e. `ssh remote-sys 'command'`.
   - `sftp` allows for file transfer from remote servers. Does not require an FTP server to be running on the remote host, only the SSH server.
+  - `wget` is used for downloading content from web and FTP sites. Can recursively download, as well as download files in the background.
 
 - Archiving
   - `gzip` compresses one or more files, and replaces the original version with the compressed version of the original.
