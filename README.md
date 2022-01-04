@@ -48,12 +48,13 @@ Because the shell uses filenames so much, it provides special characters to help
   - `history` stores the last 1000 commands. Commonly used as `history | grep filter`.
 
 - Expansions
+  - Full list of expansions [available here](https://www.gnu.org/software/bash/manual/html_node/Special-Parameters.html).
   - Using wildcards expands into matching filenames or directories.
   - `~`, or _tilde expansion_ expands into the name of the home directory of the named user, or if no user is named, the current user, i.e. `cd ~foo`.
   - `${parameter}` for _parameter expansion_. `printenv` shows a list of available variables.
     - `${parameter:-word}` is basically coalesce: if _parameter_ is not set, expansion results in the value of _word_. If _parameter_ is not empty, the expansion results in the value of _parameter_.
     - `${#parameter}` expands into the length of the string contained by _parameter_.
-    - There are more of these types of expansions to manage empty variables.
+    - There are more of these types of expansions to manage empty variables. Full list of parameter expansions [available here](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html)
   - `$(command)` for _command substitution_. Allows us to use the output of a command as an expansion, i.e. `echo $(ls)`
     - Double quotes causes all special characters to lose meaning, _except for_ `$`, `backtick` and `\\` (so word splitting, pathname expansion, tilde expansion and brace expansion are supressed). We can use an _escape character_ `\\` to supress a single special character.
     - Single quotes supresses _all expansions_.
