@@ -1,0 +1,6 @@
+#!/bin/bash
+
+while test -n "${1}"; do
+	echo "Param ${1}:" ${1}
+	shift
+done

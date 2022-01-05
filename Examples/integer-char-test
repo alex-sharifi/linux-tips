@@ -1,0 +1,12 @@
+#!/bin/bash
+
+clear
+read -p "Enter the values > " int str
+
+
+if test $(echo "$int" | grep -E "^-?[0-9]+$") -a $(echo "$str" | grep -E "^[A-Za-z]+$"); then
+	echo "$int and $str passed!"
+else
+	echo "$int and $str failed"
+	exit 1
+fi

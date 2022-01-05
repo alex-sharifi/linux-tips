@@ -1,0 +1,9 @@
+#!/bin/bash
+
+while test ${#} -ge 1; do
+	cat <<- _EOF_
+		This variable is "${1]"
+		The next one will be "${2}"
+		_EOF_
+	shift
+done

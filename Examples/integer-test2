@@ -1,0 +1,14 @@
+#!/bin/bash
+
+echo "Welcome"
+
+if test $(echo ${1} | grep -E "^-?[0-9]+$"); then
+	counter=0
+	while test ${#} -gt 0; do
+		if test ${1} -ge 5; then
+			counter=$((counter+1))
+		fi
+		shift
+	done
+	echo "Counter: ${counter}"
+fi
