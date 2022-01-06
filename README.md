@@ -208,8 +208,9 @@ Because the shell uses filenames so much, it provides special characters to help
 
 - Flow Control: Looping
   - `while commands; do commands; done` is the format.
-    - Commonly used as `while test expr; do commands; done`.
-    - As long as a `test` command returns an exit status of 0, the commands within the loop are executed.
+    - Commonly used as `while test expr; do commands; done`. But not always used with `test` because... see below.
+    - As long as the exit status of `command` is 0, it performs the commands inside the loop.
+    - Using `test` with `while` is common because it provides comparison operators. But if the comparison operator is not required, it can be ommitted.
   - `break` immediately terminates a loop; `continue` causes the remainder of the loop to be skipped, and program control resumes with the next iteration of the loop.
   - `until` continues until it receives a non-zero exit status.
   - `for variable in words; do commands done` is the _for_ syntax.
