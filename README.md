@@ -31,9 +31,10 @@ Because the shell uses filenames so much, it provides special characters to help
   - `cal` for a nice calendar.
   - `free` displays the amount of free memory.
   - `df` displays hthe amount of free space on our disk drives.
-  - `sed` does find and replace on text. Format is `sed 's/regexp/replacement/g/ [file]`
+  - `sed` does find and replace on text. Format is `sed 's/regexp/replacement/g [file]`
     - The _g_ flag changes all instances if there are multiple matches.
-    - Back references can be used with \{_n_} (where _n_ is a number) to substitue the corresponding subexpression in the preceding regular expression.
+    - Back references can be used with \_n_ (where _n_ is a number) to substitue the corresponding subexpression in the preceding regular expression. Each corresponding subexpression needs to be enclosed in brackets.
+    - *Escape all special characters!!!*
     - `sed -f [sed-file] [file]` references a `sed` expression from a saved file.
     - `sed -i` edits the file in place, meaning that rather than sending the edited output to _stdout_, it will rewrite the file with the changes applied.
     - `sed 's/regexp/replacement/g/; s/regexp/replacement/g/' [file]` places more than one editing command on the line by separating them with a semicolon.
