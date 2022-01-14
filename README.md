@@ -24,7 +24,7 @@ Because the shell uses filenames so much, it provides special characters to help
 # Useful Linux Commands
 
 - Utilities
-  - `${?}` examines exit status (an integer ranging between 0 to 255) where 0 indicates success.
+  - `${?}` is a [special parameter](https://www.gnu.org/software/bash/manual/bash.html#Special-Parameters) which examines exit status (an integer ranging between 0 to 255) where 0 indicates success.
     - Because it is a variable, remember to use it as `echo ${?}` otherwise the shell will return an error, trying to execute the value as a command.
     - `true` command always executes successfully (exit status 0); the `false` command always executes unsuccessfully (exit status 1).
   - `date` for current date and time.
@@ -190,6 +190,7 @@ Because the shell uses filenames so much, it provides special characters to help
     - There are various options for `read`, such as `read -p prompt` displays a _prompt_ for input; `read -t seconds` sets a timeout in _seconds_.
   - `${1}..${n}` are positional parameters.
     - `${0}` will always contain the first item appearing on the command line, which is the pathname of the command being executed.
+  - There are a number of other [special parameters](https://www.gnu.org/software/bash/manual/bash.html#Special-Parameters) used frequently with shell functions:
     - `${#}` contains the number of arguments on the command line.
     - `${@}` expands into the list of positional parameters, starting with 1.
     - `shift` command causes all the parameters to _move down one_, i.e. `while test "${#}" -gt 0; do commands shift done` or `while test -n "${1}"; do commands shift done`.
