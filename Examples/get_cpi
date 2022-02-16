@@ -1,0 +1,4 @@
+#!/bin/bash
+
+output="$(curl -s 'https://www.ons.gov.uk/download/table?format=csv&uri=/economy/inflationandpriceindices/bulletins/consumerpriceinflation/november2021/d3142940.json' | tail -n -15 | head -n 13 | cut -f 1-4 -d ',')"
+echo "${output}"

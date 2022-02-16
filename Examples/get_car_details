@@ -1,0 +1,5 @@
+#/bin/bash
+
+REG=${1}
+echo ${REG}
+curl -X POST -H 'Content-Type: application/json' -H 'x-api-key: 03TCSTjLSm7h0jx0PpBqj6jDH99qb4ne5ymkeckG' -d '{"registrationNumber":'"${REG}"'}' https://driver-vehicle-licensing.api.gov.uk/vehicle-enquiry/v1/vehicles

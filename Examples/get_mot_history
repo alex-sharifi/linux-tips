@@ -1,0 +1,3 @@
+#/bin/bash
+
+curl -H 'Content-Type: application/json' -H 'x-api-key: JLEEh0ksx15xubEALXBKW9Eghw5gqnrL8xIaBrTz' "https://beta.check-mot.service.gov.uk/trade/vehicles/mot-tests?page={1}"
