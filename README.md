@@ -102,6 +102,7 @@ Because the shell uses filenames so much, it provides special characters to help
     - The second file descriptor, i.e. `&1` begins with an ampersand to distinguish it from writing out to a file called `1`.
   - `tee` sends results to another file, and _stdout_, i.e. `tee file`
   - `|` connects the standard output of one command into the standard input of a second command, i.e. `command1 | command2 | command3`.
+    - `xargs` is used to accept standard input for commands that do not typically read from _stdin_. Also useful for parallelising tasks with `-P` and `-L` options. i.e. `find . -type f | xargs -P4 -L4 -I{} cp {} ./new/{}.json` copies all files, 4 at a time, to a /new/ directory.
   - `<` changes the source of _stdin_ from the keyboard to an input file.
   - `command << token
      text
