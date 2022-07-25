@@ -97,7 +97,9 @@ Because the shell uses filenames so much, it provides special characters to help
   - `>` sends results to another file, written from the beginning. Connects a command with a file.
   - `>>` sends results to another file, appended.
   - `&>` or `>` followed by `2>&1` redirects _stdout_ and _stderr_ to one file.
-  - `1>` redirects _stdin_, `2>` redirects _stderr_.
+  - `1>` redirects _stdin_ to a file, `2>` redirects _stderr_ to a file.
+    - `>` is actually shorthand for `1>`
+    - The second file descriptor, i.e. `&1` begins with an ampersand to distinguish it from writing out to a file called `1`.
   - `tee` sends results to another file, and _stdout_, i.e. `tee file`
   - `|` connects the standard output of one command into the standard input of a second command, i.e. `command1 | command2 | command3`.
   - `<` changes the source of _stdin_ from the keyboard to an input file.
@@ -232,3 +234,4 @@ Because the shell uses filenames so much, it provides special characters to help
 - https://google.github.io/styleguide/shellguide.html#s5.6-variable-expansion
 - http://mywiki.wooledge.org/BashGuide/
 - https://www.gnu.org/software/bash/manual/bash.html
+- https://stackoverflow.com/questions/818255/in-the-shell-what-does-21-mean
