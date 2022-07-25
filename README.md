@@ -66,6 +66,7 @@ Because the shell uses filenames so much, it provides special characters to help
 - Exploring the System
   - `file` describes a file.
     - `file -i` gives more information about the file.
+    - `od -tcx1 [file]` is useful for inspecting hex representation of each character. Can be useful when there are weird-encoded characters in files. 
   - `ls` lists files in a directory.
     - `ls -d` ordinarily if a directory is specified `ls` will list the contents of the directory, not the directory itself. The `-l` option shows details about the directory rather than its contents.
     - `ls -h` displays file sizes in human-readable format.
@@ -84,6 +85,7 @@ Because the shell uses filenames so much, it provides special characters to help
     - `grep -E` enables extended regular expression support.
     - `grep -i` causes `grep` to ignore case.
     - `grep -v` causes `grep` to print only lines that do not match the pattern.
+    - Remember `[file]` can be a wildcard expansion. Useful for searching across many files within a directory.
   - `find` is given one or more names of directories to search.
     - `find ~` produces a listing of our home directory.
     - `find [directory] -type d` lists only directories, `find [directory] -type f` lists only files.
