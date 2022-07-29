@@ -23,10 +23,9 @@ Because the shell uses filenames so much, it provides special characters to help
 
 # What is the shell?
 
-> The shell is just an ordinary program like `date` or `who`, although it can do some remarkable things. The fact that the shell sits between you and the facilities of the kernel has real benefits. There are three main ones:
+According to The Unix Programming Guide (pg 26):
 
-- Filename shorthands: pick up a whole set of filenames as arguments to a program by specifying a pattern for the names - the shell will find the names to match your pattern
-- Input-output redirection: arrange for the output of any program to go into a file instead of onto the terminal, and for the input to come from a file instead of the terminal. Input and output can even be connected to other programs. 
+> The shell is just an ordinary program like `date` or `who`, although it can do some remarkable things. The fact that the shell sits between you and the facilities of the kernel has real benefits. There are three main ones: _Filename shorthands_: pick up a whole set of filenames as arguments to a program by specifying a pattern for the name the shell will find the names to match your pattern. _Input-output redirection_: arrange for the output of any program to go into a file instead of onto the terminal, and for the input to come from a file instead of the terminal. Input and output can even be connected to other programs. _Personalising_: you can define your own commands and shorthands. 
 
 # Useful Linux Commands
 
