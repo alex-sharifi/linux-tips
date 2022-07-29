@@ -21,6 +21,13 @@ Because the shell uses filenames so much, it provides special characters to help
 - `[!characters]` matches any character that is not a member of the set of `characters`.
 - Wildcards always expand in sorted order.<sup>pg 54</sup>
 
+# What is the shell?
+
+> The shell is just an ordinary program like `date` or `who`, although it can do some remarkable things. The fact that the shell sits between you and the facilities of the kernel has real benefits. There are three main ones:
+
+- Filename shorthands: pick up a whole set of filenames as arguments to a program by specifying a pattern for the names - the shell will find the names to match your pattern
+- Input-output redirection: arrange for the output of any program to go into a file instead of onto the terminal, and for the input to come from a file instead of the terminal. Input and output can even be connected to other programs. 
+
 # Useful Linux Commands
 
 - Utilities
@@ -57,13 +64,15 @@ Because the shell uses filenames so much, it provides special characters to help
     - `${parameter:-word}` is basically coalesce: if _parameter_ is not set, expansion results in the value of _word_. If _parameter_ is not empty, the expansion results in the value of _parameter_.
     - `${#parameter}` expands into the length of the string contained by _parameter_.
     - There are more of these types of expansions to manage empty variables. Full list of parameter expansions [available here](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html)
-  - `$(command)` for _command substitution_. Allows us to use the output of a command as an expansion, i.e. `echo $(ls)`
+  - `$(command)` for [_command substitution_](https://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html). Allows us to use the output of a command as an expansion, i.e. `echo $(ls)`
     - Double quotes causes all special characters to lose meaning, _except for_ `$`, `backtick` and `\\` (so word splitting, pathname expansion, tilde expansion and brace expansion are supressed). We can use an _escape character_ `\\` to supress a single special character.
+    - `\`command\`` syntax is also supported for command substitution.
     - Single quotes supresses _all expansions_.
   - `$((expression))` for arithmetic expansion, but only supports integers.
   - `{}` for _brace expansion_, i.e. `echo {A,B,C}`, `echo {A..K}`, `echo {Q..F}`, `echo {1..10}`, `echo {001..100}`, `echo a{A{1,2},B{3,4}}b`.
 
 - Exploring the System
+  - "Everything in UNIX is a file" (The UNIX Programming Environment, pg. 41)
   - `file` describes a file.
     - `file -i` gives more information about the file.
     - `od -tcx1 [file]` is useful for inspecting hex representation of each character. Can be useful when there are weird-encoded characters in files. 
@@ -116,10 +125,11 @@ Because the shell uses filenames so much, it provides special characters to help
 
 - Environment
   - `printenv` displays what has been stored in the environment variables.
+  - You can obtain the value of any shell variable by prefixing its name with a `$` (The UNIX Programming Environment, pg 37).
   - `set` builtin displays what has been stored in the shell and environment variables, as well as any defined shell functions.
   - `printenv [var]` or `echo ${var}` displays the value of a specific variable.
   - The `~/.bashrc` file is a user's personal startup file. It can be used to extend or override settings in the global configuration script.
-    - The `PATH` variable provides a list of directories to search for commands. It can be extended to include additional paths by `export PATH="${HOME}"/bin:"${PATH}"`. To add directores to your `PATH` or define additional environment variables, place the changes in the `~/.bashrc` file.
+    - The `PATH` variable provides a list of directories to search for commands. It can be extended to include additional paths by `export PATH="${HOME}"/bin:"${PATH}"`. To add directores to your `PATH` or define additional environment variables, place the changes in the `~/.bashrc` file. "Probably the most useful shell variable is one that controls where the shell looks for commands. The syntax is a bit strange: a sequence of directory names separated by columns." (The UNIX Programming Environment, pg. 37)
     - The `PS1` variable ('prompt string 1') defines how the prompt string looks. You can use various escape codes to set values and colours.
   - `variable=value` is how variables are assigned.
     - `declare -r VAR=VAL` defines a variable with constraints.
@@ -216,7 +226,8 @@ Because the shell uses filenames so much, it provides special characters to help
     - Since all expressions used by `test` are treated as command arguments by the shell (unlike `[[ ]]` and `(( ))`), characters that have special meaning to bash, such as `<`, `>`, `(` and `)` must be quoted or escaped.
 
 - Flow Control: Looping
-  - `while commands; do commands; done` is the format.
+  - Full list of looping constructs are [available here](https://www.gnu.org/software/bash/manual/html_node/Looping-Constructs.html).
+  - `while commands; do commands; done` is the _while_ syntax.
     - Commonly used as `while test expr; do commands; done`. But not always used with `test` because... see below.
     - As long as the exit status of `command` is 0, it performs the commands inside the loop.
     - Using `test` with `while` is common because it provides comparison operators. But if the comparison operator is not required, it can be ommitted.
