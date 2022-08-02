@@ -74,7 +74,8 @@ According to The Unix Programming Guide (pg 26):
   - "Everything in UNIX is a file" (The UNIX Programming Environment, pg. 41)
   - `file` describes a file.
     - `file -i` gives more information about the file.
-    - `od -tcx1 [file]` is useful for inspecting hex representation of each character. Can be useful when there are weird-encoded characters in files. 
+    - `od -tcx1 [file]` is useful for inspecting hex representation of each character. Can be useful when there are weird-encoded characters in files.
+    - The file system does not determine file types and the kernel cannot tell you the type of a file - so the `file` command makes an educated guess. For example, `file` may read the first few hundred bytes of a file to look for clues, i.e. 'magic numbers' at the beginning of a runnable file, or '#include' words in the file to identify C source. In UNIX, there is just one kind of file, and all that is required to access a file is its name. Programmers need not worry about file types - everything is treated as text files. 
   - `ls` lists files in a directory.
     - `ls -d` ordinarily if a directory is specified `ls` will list the contents of the directory, not the directory itself. The `-l` option shows details about the directory rather than its contents.
     - `ls -h` displays file sizes in human-readable format.
@@ -146,7 +147,8 @@ According to The Unix Programming Guide (pg 26):
     - `sudo` allows ordinary users to execute commands as a different user (usually the superuser) in a controlled way, and does not require access to the superuser's password but requires the user's own password. `sudo -i` starts an interactive superuser session. `sudo -l` lists superuser privileges granted by `sudo`.
   - `chown` changes Owner and Group of a file or directory (superuser privileges required).
     - `chown [owner][:[group]] file...` changes ownership of `file` from its current owner to the user `[owner]`
-  - Common permissions sequence is: `chown user file; chmod 700 file`
+  - Common permissions sequence is: `chown user file; chmod 700 file`.
+  - The file `/etc/passwd` contains all the login information about each user, so you can discover your uid and group-id. The password field is encrypted - when you enter your password into `login` it encrypts your password and compares it to this file.
 
 - Processes
   - `ps` views processes. `ps a` is a common way of running the `ps` command.
