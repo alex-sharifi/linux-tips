@@ -111,7 +111,7 @@ According to The Unix Programming Guide (pg 26):
     - The second file descriptor, i.e. `&1` begins with an ampersand to distinguish it from writing out to a file called `1`.
   - `tee` sends results to another file, and _stdout_, i.e. `tee file`
   - `|` connects the standard output of one command into the standard input of a second command, i.e. `command1 | command2 | command3`.
-    - `xargs` is used to accept standard input for commands that do not typically read from _stdin_. Also useful for parallelising tasks with `-P` and `-L` options. i.e. `find . -type f | xargs -P4 -L4 -I{} cp {} ./new/{}.json` copies all files, 4 at a time, to a /new/ directory.
+    - `xargs` is used to accept standard input for commands that do not typically read from _stdin_. Also useful for parallelising tasks with `-P` and `-L` options. i.e. `find . -type f | xargs -P4 -L4 -I{} cp {} ./new/{}.json` copies all files, 4 at a time, to a /new/ directory. A nice description can be [found here](https://adamdrake.com/command-line-tools-can-be-235x-faster-than-your-hadoop-cluster.html#parallelize-the-bottlenecks).
   - `<` changes the source of _stdin_ from the keyboard to an input file.
   - `command << token
      text
