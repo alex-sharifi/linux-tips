@@ -33,6 +33,7 @@ According to The Unix Programming Guide (pg 26):
   - `${?}` is a [special parameter](https://www.gnu.org/software/bash/manual/bash.html#Special-Parameters) which examines exit status (an integer ranging between 0 to 255) where 0 indicates success.
     - Because it is a variable, remember to use it as `echo ${?}` otherwise the shell will return an error, trying to execute the value as a command.
     - `true` command always executes successfully (exit status 0); the `false` command always executes unsuccessfully (exit status 1).
+  - "`rm` removes directory entries or links. Only when the last link to a file disappears does the system remove the inode, and hence the file itself... `rm`'ing a file just breaks a link; the file remains until the last link is removed" (The UNIX Programming Environment, pg. 59). This is important in the context of 'i-nodes'.
   - `date` for current date and time.
   - `cal` for a nice calendar.
   - `free` displays the amount of free memory.
@@ -71,7 +72,7 @@ According to The Unix Programming Guide (pg 26):
   - `{}` for _brace expansion_, i.e. `echo {A,B,C}`, `echo {A..K}`, `echo {Q..F}`, `echo {1..10}`, `echo {001..100}`, `echo a{A{1,2},B{3,4}}b`.
 
 - Exploring the System
-  - "Everything in UNIX is a file" (The UNIX Programming Environment, pg. 41)
+  - "Everything in UNIX is a file... A file is a sequence of bytes" (The UNIX Programming Environment, pg. 41). Therefore everything in UNIX is a sequence of bytes. The meaning of the bytes depends solely on the programs that interpret the file. "In UNIX systems there is just one kind of file, and all that is required to access a file is its name. The lack of file formats is an advantage overall." (The UNIX Programming Environment, pg. 47).
   - `file` describes a file.
     - `file -i` gives more information about the file.
     - `od -tcx1 [file]` is useful for inspecting hex representation of each character. Can be useful when there are weird-encoded characters in files.
@@ -79,12 +80,15 @@ According to The Unix Programming Guide (pg 26):
   - `ls` lists files in a directory.
     - `ls -d` ordinarily if a directory is specified `ls` will list the contents of the directory, not the directory itself. The `-l` option shows details about the directory rather than its contents.
     - `ls -h` displays file sizes in human-readable format.
-    - `ls -l` displays in long format. The first part is access rights for the file. The second part is number of hard links. The third part is the username of the file's owner. The fourth part is the username of the file's owner. The fifth part is the name of the group that owns the file. The sixth part is size of the file in bytes. The seventh part is the date and time of the last modified date. The eighth part is the name of the file.
+    - `ls -l` displays in long format. The first part is access rights for the file - the first character is the ["file mode"](https://en.wikipedia.org/wiki/Unix_file_types). The second part is number of hard links. The third part is the username of the file's owner. The fourth part is the username of the file's owner. The fifth part is the name of the group that owns the file. The sixth part is size of the file in bytes. The seventh part is the date and time of the last modified date. The eighth part is the name of the file.
 
 - Manipulating Files and Directories
   - `ln -s item symlink-name` creates a symbolic link to a file. Directory listings begin with a `l`. Symbolic links are identified with the _l_ attribute in the file attributes.
 
 - Working With Commands
+  - "A command usually ends with a newline, but a semicolon `;` and `&` are  _command terminators_..." (The UNIX Programming Environment, pg 72)
+    - "The precedence of `|` and `&` is higher than that of `;` as the shell parses your command line." This is important because a pipe forms a single command.
+  - Parentheses can be used to group commands, i.e. `(date; who)`.
   - `which` determines the exact location of a given executable, useful if there is more than one version of an executable program installed on a system.
   - `apropos` or `man -k` searches the man pages for a keyword and lists relevant commands.
   - `alias _name_='_string_'` assigns a command(s) to an alias. `alias` lists all current aliases. `unalias _alias_` unassigns an alias.
@@ -104,6 +108,7 @@ According to The Unix Programming Guide (pg 26):
 - Redirection
   - I/O redirection allows us to change where input comes from and output goes. Normally standard input (_stdin_) comes from the keyboard and standard output (_stdout_) goes to the screen.
   - `>` sends results to another file, written from the beginning. Connects a command with a file.
+    - Redirecting to `/dev/null` is to throw away regular output so that diagnostic messages are visible.
   - `>>` sends results to another file, appended.
   - `&>` or `>` followed by `2>&1` redirects _stdout_ and _stderr_ to one file.
   - `1>` redirects _stdin_ to a file, `2>` redirects _stderr_ to a file.
@@ -119,9 +124,9 @@ According to The Unix Programming Guide (pg 26):
   - `<<<` is a _here string_. Like a _here document_ but only consisting of a single line of input
 
 - Control Operators
+  - `;`, i.e. `command1; command2; command3;...` sequences commands but not not rely on the previous command to be successful for subsequent commands to be executed.
   - `&&`, i.e. `command1 && command2` executes _command1_, and _command2_ is executed if _command1_ is successful.
   - `||`, i.e. `command1 || command2` executes _command2_ if _command1_ is unsuccessful.
-  - `;`, i.e. `command1; command2; command3;...` sequences commands but not not rely on the previous command to be successful for subsequent commands to be executed.
 
 - Environment
   - `printenv` displays what has been stored in the environment variables.
@@ -140,6 +145,7 @@ According to The Unix Programming Guide (pg 26):
 - Permissions
   - Modern Linux practise is to create a unique, single-member group with the same name as the user.
   - `chmod` changes _file mode_. Only file's owner or the superuser can change the mode of a file or directory. `chmod 755 file` is common because it gives Owner read/write/execute permissions, and Group and World read/execute permissions.
+    - "If a file is executable and if it contains text, then the shell assumes it to be a file of shell commands" (The UNIX Programming Environment, pg 81).
   - `umask` sets the default file permissions.
   - `su [user]` starts a shell as another user.
     - `su -l [user]` loads the user's environment and changes the working directory to the user's home directory. You will often see this as `su -` because the _l_ letter is not required, and if the user is not specified, superuser is assumed.
