@@ -56,20 +56,21 @@ According to The Unix Programming Guide (pg 26):
   - `history` stores the last 1000 commands. Commonly used as `history | grep filter`.
 
 - Expansions
-  - Full list of expansions [available here](https://www.gnu.org/software/bash/manual/html_node/Special-Parameters.html).
-  - Using wildcards expands into matching filenames or directories.
-  - `~`, or _tilde expansion_ expands into the name of the home directory of the named user, or if no user is named, the current user, i.e. `cd ~foo`.
-  - `${parameter}` for _parameter expansion_. `printenv` shows a list of available variables.
-    - In most cases, the syntax `"${parameter}"` [is preferred](https://google.github.io/styleguide/shellguide.html#s5.6-variable-expansion).
-    - `${parameter:-word}` is basically coalesce: if _parameter_ is not set, expansion results in the value of _word_. If _parameter_ is not empty, the expansion results in the value of _parameter_.
-    - `${#parameter}` expands into the length of the string contained by _parameter_.
-    - There are more of these types of expansions to manage empty variables. Full list of parameter expansions [available here](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html)
-  - `$(command)` for [_command substitution_](https://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html). Allows us to use the output of a command as an expansion, i.e. `echo $(ls)`
-    - Double quotes causes all special characters to lose meaning, _except for_ `$`, `backtick` and `\\` (so word splitting, pathname expansion, tilde expansion and brace expansion are supressed). We can use an _escape character_ `\\` to supress a single special character.
-    - `\`command\`` syntax is also supported for command substitution.
-    - Single quotes supresses _all expansions_.
-  - `$((expression))` for arithmetic expansion, but only supports integers.
-  - `{}` for _brace expansion_, i.e. `echo {A,B,C}`, `echo {A..K}`, `echo {Q..F}`, `echo {1..10}`, `echo {001..100}`, `echo a{A{1,2},B{3,4}}b`.
+  - Wildcard expansions expand into matching filenames or directories.
+    - `~`, or _tilde expansion_ expands into the name of the home directory of the named user, or if no user is named, the current user, i.e. `cd ~foo`.
+  - Parameter expansions expand into command arguments.
+    - Full list of expansions [available here](https://www.gnu.org/software/bash/manual/html_node/Special-Parameters.html).
+    - `${parameter}` for _parameter expansion_. `printenv` shows a list of available variables.
+      - In most cases, the syntax `"${parameter}"` [is preferred](https://google.github.io/styleguide/shellguide.html#s5.6-variable-expansion).
+      - `${parameter:-word}` is basically coalesce: if _parameter_ is not set, expansion results in the value of _word_. If _parameter_ is not empty, the expansion results in the value of _parameter_.
+      - `${#parameter}` expands into the length of the string contained by _parameter_.
+      - There are more of these types of expansions to manage empty variables. Full list of parameter expansions [available here](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html)
+    - `$(command)` for [_command substitution_](https://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html). Allows us to use the output of a command as an expansion, i.e. `echo $(ls)`
+      - Double quotes causes all special characters to lose meaning, _except for_ `$`, `backtick` and `\\` (so word splitting, pathname expansion, tilde expansion and brace expansion are supressed). We can use an _escape character_ `\\` to supress a single special character.
+      - `\`command\`` syntax is also supported for command substitution.
+      - Single quotes supresses _all expansions_.
+    - `$((expression))` for arithmetic expansion, but only supports integers.
+    - `{}` for _brace expansion_, i.e. `echo {A,B,C}`, `echo {A..K}`, `echo {Q..F}`, `echo {1..10}`, `echo {001..100}`, `echo a{A{1,2},B{3,4}}b`.
 
 - Exploring the System
   - "Everything in UNIX is a file... A file is a sequence of bytes" (The UNIX Programming Environment, pg. 41). Therefore everything in UNIX is a sequence of bytes. The meaning of the bytes depends solely on the programs that interpret the file. "In UNIX systems there is just one kind of file, and all that is required to access a file is its name. The lack of file formats is an advantage overall." (The UNIX Programming Environment, pg. 47).
