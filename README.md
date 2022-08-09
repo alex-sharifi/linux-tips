@@ -67,7 +67,7 @@ According to The Unix Programming Guide (pg 26):
       - There are more of these types of expansions to manage empty variables. Full list of parameter expansions [available here](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html)
     - `$(command)` for [_command substitution_](https://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html). Allows us to use the output of a command as an expansion, i.e. `echo $(ls)`
       - Double quotes causes all special characters to lose meaning, _except for_ `$`, `backtick` and `\\` (so word splitting, pathname expansion, tilde expansion and brace expansion are supressed). We can use an _escape character_ `\\` to supress a single special character.
-      - `\`command\`` syntax is also supported for command substitution.
+      - Enclosing commands in backticks is equivalent, i.e. ` \`command\` ` is the alternative syntax.
       - Single quotes supresses _all expansions_.
     - `$((expression))` for arithmetic expansion, but only supports integers.
     - `{}` for _brace expansion_, i.e. `echo {A,B,C}`, `echo {A..K}`, `echo {Q..F}`, `echo {1..10}`, `echo {001..100}`, `echo a{A{1,2},B{3,4}}b`.
