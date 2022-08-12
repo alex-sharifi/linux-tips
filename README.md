@@ -29,6 +29,8 @@ According to The Unix Programming Guide (pg 26):
 
 # Useful Linux Commands
 
+![Shell metacharacters](/images/shell-metacharacters.png)
+
 - Utilities
   - `${?}` is a [special parameter](https://www.gnu.org/software/bash/manual/bash.html#Special-Parameters) which examines exit status (an integer ranging between 0 to 255) where 0 indicates success.
     - Because it is a variable, remember to use it as `echo ${?}` otherwise the shell will return an error, trying to execute the value as a command.
@@ -65,9 +67,9 @@ According to The Unix Programming Guide (pg 26):
       - `${parameter:-word}` is basically coalesce: if _parameter_ is not set, expansion results in the value of _word_. If _parameter_ is not empty, the expansion results in the value of _parameter_.
       - `${#parameter}` expands into the length of the string contained by _parameter_.
       - There are more of these types of expansions to manage empty variables. Full list of parameter expansions [available here](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html)
-    - `$(command)` for [_command substitution_](https://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html). Allows us to use the output of a command as an expansion, i.e. `echo $(ls)`
+    - `$(command)` or ```command``` for [_command substitution_](https://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html). Allows us to use the output of a command as an expansion, i.e. `echo $(ls)`
+      - When interpreting output in backquotes as arguments, i.e. `ls $(cat file)`, the shell treats newlines as word separators, not command-line terminators.
       - Double quotes causes all special characters to lose meaning, _except for_ `$`, `backtick` and `\\` (so word splitting, pathname expansion, tilde expansion and brace expansion are supressed). We can use an _escape character_ `\\` to supress a single special character.
-      - Enclosing commands in backticks is equivalent, i.e. ` \`command\` ` is the alternative syntax.
       - Single quotes supresses _all expansions_.
     - `$((expression))` for arithmetic expansion, but only supports integers.
     - `{}` for _brace expansion_, i.e. `echo {A,B,C}`, `echo {A..K}`, `echo {Q..F}`, `echo {1..10}`, `echo {001..100}`, `echo a{A{1,2},B{3,4}}b`.
@@ -124,6 +126,8 @@ According to The Unix Programming Guide (pg 26):
      token` is a _here document_, where _command_ is the name of a command that accepts _stdin_, and `token` is frequently _EOF_.
   - `<<<` is a _here string_. Like a _here document_ but only consisting of a single line of input
 
+![Redirection options](/images/shell-redirection.png)
+
 - Control Operators
   - `;`, i.e. `command1; command2; command3;...` sequences commands but not not rely on the previous command to be successful for subsequent commands to be executed.
   - `&&`, i.e. `command1 && command2` executes _command1_, and _command2_ is executed if _command1_ is successful.
@@ -132,16 +136,16 @@ According to The Unix Programming Guide (pg 26):
 - Environment
   - `printenv` displays what has been stored in the environment variables.
   - You can obtain the value of any shell variable by prefixing its name with a `$` (The UNIX Programming Environment, pg 37).
-  - `set` builtin displays what has been stored in the shell and environment variables, as well as any defined shell functions.
+  - `set` builtin displays what has been stored in the shell and environment variables, as well as any defined shell functions. "The value of a variable is associated with the shell that creates it, and is not automatically passed to the shell's children" (The UNIX Programming Environment, pg. 89) 
   - `printenv [var]` or `echo ${var}` displays the value of a specific variable.
   - The `~/.bashrc` file is a user's personal startup file. It can be used to extend or override settings in the global configuration script.
     - The `PATH` variable provides a list of directories to search for commands. It can be extended to include additional paths by `export PATH="${HOME}"/bin:"${PATH}"`. To add directores to your `PATH` or define additional environment variables, place the changes in the `~/.bashrc` file. "Probably the most useful shell variable is one that controls where the shell looks for commands. The syntax is a bit strange: a sequence of directory names separated by columns." (The UNIX Programming Environment, pg. 37)
     - The `PS1` variable ('prompt string 1') defines how the prompt string looks. You can use various escape codes to set values and colours.
   - `variable=value` is how variables are assigned.
     - `declare -r VAR=VAL` defines a variable with constraints.
-    - `export VAR=VAL` tells the shell to make the contents of _VAR_ available to child processes of this shell.
+    - `export VAR=VAL` tells the shell to make the contents of _VAR_ available to child processes of this shell, i.e. when you want to make the value of a variable accessible in sub-shells, the shell's `export` command should be used. But do not `export` temporary variables set for short-term convenience.
   - `source [file]` forces bash to read the shell script in [file].
-    - The dot `.` command is a synonym for the `source` command, a shell builtin that reads a specified file of shell commands and treats it like input from the keyboard.
+    - The dot `.` command is a synonym for the `source` command, a shell builtin that reads a specified file of shell commands and treats it like input from the keyboard. "The `.` command executes the commands in the current shell, rather than in a subshell."
 
 - Permissions
   - Modern Linux practise is to create a unique, single-member group with the same name as the user.
@@ -235,15 +239,18 @@ According to The Unix Programming Guide (pg 26):
 
 - Flow Control: Looping
   - Full list of looping constructs are [available here](https://www.gnu.org/software/bash/manual/html_node/Looping-Constructs.html).
+  - Remember the shell already does things like looping with wildcard expansion, i.e. `chmod +x *` is a more efficient loop. Think about whether a loop is needed, or whether an expansion can be used.
+  - `for variable in words; do commands; done` is the _for_ syntax.
+    - The argument list for a `for` can come from anything, i.e. `for i in $(cat file); do ...; done;`
+    - Supports pathname expansion, i.e. `for i in distros*.txt; do ...; done`
+    - You can split this syntax over multiple lines, the main thing to remember is that the `do` and `done` keywords need to appear right after a semicolon or a newline.
+    - Alternative syntax is `for (( expression1; expression2; expression3 )); do commands; done`
   - `while commands; do commands; done` is the _while_ syntax.
     - Commonly used as `while test expr; do commands; done`. But not always used with `test` because... see below.
     - As long as the exit status of `command` is 0, it performs the commands inside the loop.
     - Using `test` with `while` is common because it provides comparison operators. But if the comparison operator is not required, it can be ommitted.
   - `break` immediately terminates a loop; `continue` causes the remainder of the loop to be skipped, and program control resumes with the next iteration of the loop.
   - `until` continues until it receives a non-zero exit status.
-  - `for variable in words; do commands done` is the _for_ syntax.
-    - Supports pathname expansion, i.e. `for i in distros*.txt; do ...`
-    - Alternative syntax is `for (( expression1; expression2; expression3 )); do commands done`
 
 - Flow Control: Branching
   - `case word in [pattern [| pattern]...) commands ;;]... esac`
