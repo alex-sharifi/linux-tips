@@ -21,6 +21,8 @@ Because the shell uses filenames so much, it provides special characters to help
 - `[!characters]` matches any character that is not a member of the set of `characters`.
 - Wildcards always expand in sorted order.<sup>pg 54</sup>
 
+
+
 # What is the shell?
 
 According to The Unix Programming Guide (pg 26):
@@ -30,6 +32,8 @@ According to The Unix Programming Guide (pg 26):
 # Useful Linux Commands
 
 ![Shell metacharacters](/images/shell-metacharacters.png)
+
+![Shell built-in variables](/images/shell-builtin-variables.png)
 
 - Utilities
   - `${?}` is a [special parameter](https://www.gnu.org/software/bash/manual/bash.html#Special-Parameters) which examines exit status (an integer ranging between 0 to 255) where 0 indicates success.
@@ -73,6 +77,8 @@ According to The Unix Programming Guide (pg 26):
       - Single quotes supresses _all expansions_.
     - `$((expression))` for arithmetic expansion, but only supports integers.
     - `{}` for _brace expansion_, i.e. `echo {A,B,C}`, `echo {A..K}`, `echo {Q..F}`, `echo {1..10}`, `echo {001..100}`, `echo a{A{1,2},B{3,4}}b`.
+
+![Shell pattern matching](/images/shell-pattern-matching.png)
 
 - Exploring the System
   - "Everything in UNIX is a file... A file is a sequence of bytes" (The UNIX Programming Environment, pg. 41). Therefore everything in UNIX is a sequence of bytes. The meaning of the bytes depends solely on the programs that interpret the file. "In UNIX systems there is just one kind of file, and all that is required to access a file is its name. The lack of file formats is an advantage overall." (The UNIX Programming Environment, pg. 47).
