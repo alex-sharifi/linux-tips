@@ -92,6 +92,7 @@ According to The Unix Programming Guide (pg 26):
   - "A command usually ends with a newline, but a semicolon `;` and `&` are  _command terminators_..." (The UNIX Programming Environment, pg 72)
     - "The precedence of `|` and `&` is higher than that of `;` as the shell parses your command line." This is important because a pipe forms a single command.
   - Parentheses can be used to group commands, i.e. `(date; who)`.
+    - This can be helpful when backgrounding tasks, i.e. `sleep 5; echo done &` will sleep first (thus blocking terminal input), _then_ echo "done" (which is probably not what we want to do), whereas `(sleep 5; echo done) &` will put the two commands in the background, i.e. sleep then echo "done" in 5 seconds, but without blocking further terminal input. 
   - `which` determines the exact location of a given executable, useful if there is more than one version of an executable program installed on a system.
   - `apropos` or `man -k` searches the man pages for a keyword and lists relevant commands.
   - `alias _name_='_string_'` assigns a command(s) to an alias. `alias` lists all current aliases. `unalias _alias_` unassigns an alias.
@@ -166,6 +167,9 @@ According to The Unix Programming Guide (pg 26):
   - `top` displays a continuously updating display of system processes.
   - `CTRL-C` _interrupts_ a program. 
   - `command &` puts a process in the background and is immune from terminal keyboard input, including any attempt to interrupt it with `CTRL-C`.
+    - An instance of a running program is called a 'process'. The number printed by the shell for a command initiated with `&` is called the process-id. `&` applies to entire pipelines.
+    - `wait` waits until all processes initiated with `&` have finished.
+    - `ps` can be used to tell you everything you have running.
   - `jobs` lists jobs that have been launched from the terminal.
   - `fg` returns a process to the foreground, or `fg %[job number]` if there is more than one job.
   - `bg` moves a process back into the background, or `bg %[job number]` if there is more than one job.
@@ -222,7 +226,7 @@ According to The Unix Programming Guide (pg 26):
   - There are a number of other [special parameters](https://www.gnu.org/software/bash/manual/bash.html#Special-Parameters) used frequently with shell functions:
     - `${#}` contains the number of arguments on the command line.
     - `${@}` expands into the list of positional parameters, starting with 1.
-    - `shift` command causes all the parameters to _move down one_, i.e. `while test "${#}" -gt 0; do commands shift done` or `while test -n "${1}"; do commands shift done`.
+    - `shift` command causes all the parameters to _move down one_, i.e. `while test "${#}" -gt 0; do commands shift; done` or `while test -n "${1}"; do commands shift done`.
 
 - Flow Control: If
   - `if commands; then commands [elif commands; then commands...] [else commands] fi` is the format.
@@ -243,6 +247,7 @@ According to The Unix Programming Guide (pg 26):
   - `for variable in words; do commands; done` is the _for_ syntax.
     - The argument list for a `for` can come from anything, i.e. `for i in $(cat file); do ...; done;`
     - Supports pathname expansion, i.e. `for i in distros*.txt; do ...; done`
+    - If the `in words` part is missing, i.e. `for i`, the list is implicitly all arguments to a shell file, i.e. `$*`, a convenient shorthand for the most common usage (The UNIX Programming Environment, pg. 145)
     - You can split this syntax over multiple lines, the main thing to remember is that the `do` and `done` keywords need to appear right after a semicolon or a newline.
     - Alternative syntax is `for (( expression1; expression2; expression3 )); do commands; done`
   - `while commands; do commands; done` is the _while_ syntax.
@@ -255,6 +260,17 @@ According to The Unix Programming Guide (pg 26):
 - Flow Control: Branching
   - `case word in [pattern [| pattern]...) commands ;;]... esac`
   - Patterns used by `case` are the same as those used by pathname expansion.
+
+- `awk`
+  - `awk` syntax goes `awk 'program' [filenames...]`, where 'program' goes `awk '/regular expression/ { print }' [filenames...]`, and reads the input in the filenames one line at a time.
+  - Either the pattern or the action is optional. If action is omitted, the default action is to print the matched lines, i.e. `awk '/regular expression/' [filenames...]`. If the pattern is omitted, then the action is done for every line, i.e. `awk '{ print } [filenames...]'`.
+  - The 'program' (i.e. pattern and action) can be presented to `awk` from a file with `awk -f file [filenames...]`
+  - Fields: `awk` splits each input line automatically into 'fields'. `awk` assumes a white space but this can be altered with the command line option `-F`, i.e. `awk -F: ' { print } [filenames...]`
+    - Fields are called `$1`, `$2` ... `$NF`, where `$NF` is the last field on the line. `$0` is the entire input line, unchanged. `NF` is a built-in variable that is a count of the fields per line. `NR` is a built-in variable with the number of the current input record.
+  - Printing: items in the `print` statement of the action are printed, separated by the output field separator. Print output can be customised with `printf`
+  - Pattern matching: filter on values in a given field, i.e. filtering on values in column 2 would be: `awk '$2 ~ /pattern/' [filenames...]`
+  - BEGIN and END parameters can be used to initate variables, print headings, set field separators; or complete actions after the last line has been processed, respectively.
+  - Variables are defined by being used, and initialised to zero by default.
 
 # Useful Websites
 
