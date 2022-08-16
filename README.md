@@ -50,7 +50,7 @@ According to The Unix Programming Guide (pg 26):
     - **Escape all special characters!!!**
     - `sed -f [sed-file] [file]` references a `sed` expression from a saved file.
     - `sed -i` edits the file in place, meaning that rather than sending the edited output to _stdout_, it will rewrite the file with the changes applied.
-    - `sed 's/regexp/replacement/g/; s/regexp/replacement/g/' [file]` places more than one editing command on the line by separating them with a semicolon.
+    - `sed 's/regexp/replacement/g/; s/regexp/replacement/g/' [file]` places more than one editing command on the line by separating them with a semicolon. Alternatively, just place one `sed` command after another because `sed` does substitutions in order.
   - `printf` does not accept _stdin_ but is given a string containing a format description, which is then applied to a list of arguments.
 
 - Navigation
@@ -71,8 +71,8 @@ According to The Unix Programming Guide (pg 26):
       - `${parameter:-word}` is basically coalesce: if _parameter_ is not set, expansion results in the value of _word_. If _parameter_ is not empty, the expansion results in the value of _parameter_.
       - `${#parameter}` expands into the length of the string contained by _parameter_.
       - There are more of these types of expansions to manage empty variables. Full list of parameter expansions [available here](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html)
-    - `$(command)` or ```command``` for [_command substitution_](https://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html). Allows us to use the output of a command as an expansion, i.e. `echo $(ls)`
-      - When interpreting output in backquotes as arguments, i.e. `ls $(cat file)`, the shell treats newlines as word separators, not command-line terminators.
+    - `$(command)` or `command` enclosed in backticks for [_command substitution_](https://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html). Allows us to use the output of a command as an expansion, i.e. `echo $(ls)`
+      - When interpreting output in backquotes as arguments, i.e. `ls $(cat file)`, the shell treats newlines as word separators, not command-line terminators. This can be helpful when using command substitution to provide arguments for another command.
       - Double quotes causes all special characters to lose meaning, _except for_ `$`, `backtick` and `\\` (so word splitting, pathname expansion, tilde expansion and brace expansion are supressed). We can use an _escape character_ `\\` to supress a single special character.
       - Single quotes supresses _all expansions_.
     - `$((expression))` for arithmetic expansion, but only supports integers.
@@ -139,11 +139,13 @@ According to The Unix Programming Guide (pg 26):
   - `;`, i.e. `command1; command2; command3;...` sequences commands but not not rely on the previous command to be successful for subsequent commands to be executed.
   - `&&`, i.e. `command1 && command2` executes _command1_, and _command2_ is executed if _command1_ is successful.
   - `||`, i.e. `command1 || command2` executes _command2_ if _command1_ is unsuccessful.
+  - `&&` and `||` are more compact and convenient than writing an `if` statement.
 
 - Environment
   - `printenv` displays what has been stored in the environment variables.
   - You can obtain the value of any shell variable by prefixing its name with a `$` (The UNIX Programming Environment, pg 37).
   - `set` builtin displays what has been stored in the shell and environment variables, as well as any defined shell functions. "The value of a variable is associated with the shell that creates it, and is not automatically passed to the shell's children" (The UNIX Programming Environment, pg. 89) 
+    - Running the `set` command without any arguments, it shows the values of variables in the current environment. Running `set` with arguments, i.e. `set 1 2 3` or `set $(date)` or `set $(ls)` reset the values of `$1`, `$2`, `$3`. This can be useful when needing to conditionally override the argument values passed into a shell script. 
   - `printenv [var]` or `echo ${var}` displays the value of a specific variable.
   - The `~/.bashrc` file is a user's personal startup file. It can be used to extend or override settings in the global configuration script.
     - The `PATH` variable provides a list of directories to search for commands. It can be extended to include additional paths by `export PATH="${HOME}"/bin:"${PATH}"`. To add directores to your `PATH` or define additional environment variables, place the changes in the `~/.bashrc` file. "Probably the most useful shell variable is one that controls where the shell looks for commands. The syntax is a bit strange: a sequence of directory names separated by columns." (The UNIX Programming Environment, pg. 37)
@@ -235,10 +237,12 @@ According to The Unix Programming Guide (pg 26):
     - `shift` command causes all the parameters to _move down one_, i.e. `while test "${#}" -gt 0; do commands shift; done` or `while test -n "${1}"; do commands shift done`.
 
 - Flow Control: If
-  - `if commands; then commands [elif commands; then commands...] [else commands] fi` is the format.
-  - `test` performs checks and comparisons to return an exit status of 0 when the expression is true, and a status of 1 when an exit status is false.
+  - `if commands; then commands [elif commands; then commands...] [;else commands]; fi` is the format. `then`, `else`, `fi` are recognised only after a newline or semicolon.
+  - The shell's `if` statement runs commands based on the exit status of a command.
+  - `test` performs checks and comparisons to return an exit status of 0 when the expression is true, and a status of 1 when an exit status is false. It's sole purpose is to return an exit status. It produces no output and changes no files. The shell stores the exit status of the last program in the variable `$?`.
     - `test -e file` checks for presence of _file_.
     - `test -d file` checks if _file_ exists and is a directory.
+    - `test -f file` checks if _file_ exists and is not a directory.
     - `test string` checks if _string_ is not null.
     - `test -n string` checks the length of _string_ is greater than 0.
     - `test string1 == string2` checks if _string1_ and _string2_ are equal.
