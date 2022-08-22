@@ -288,3 +288,4 @@ According to The Unix Programming Guide (pg 26):
 - http://mywiki.wooledge.org/BashGuide/
 - https://www.gnu.org/software/bash/manual/bash.html
 - https://stackoverflow.com/questions/818255/in-the-shell-what-does-21-mean
+- https://blog.liw.fi/posts/2022/05/07/unix-cli/
