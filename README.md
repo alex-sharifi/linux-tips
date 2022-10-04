@@ -21,8 +21,6 @@ Because the shell uses filenames so much, it provides special characters to help
 - `[!characters]` matches any character that is not a member of the set of `characters`.
 - Wildcards always expand in sorted order.<sup>pg 54</sup>
 
-
-
 # What is the shell?
 
 According to The Unix Programming Guide (pg 26):
@@ -271,7 +269,7 @@ According to The Unix Programming Guide (pg 26):
   - `case word in [pattern [| pattern]...) commands ;;]... esac`
   - Patterns used by `case` are the same as those used by pathname expansion.
 
-- `awk`
+- AWK
   - `awk` syntax goes `awk 'program' [filenames...]`, where 'program' goes `awk '/regular expression/ { print }' [filenames...]`, and reads the input in the filenames one line at a time.
   - Either the pattern or the action is optional. If action is omitted, the default action is to print the matched lines, i.e. `awk '/regular expression/' [filenames...]`. If the pattern is omitted, then the action is done for every line, i.e. `awk '{ print } [filenames...]'`.
   - The 'program' (i.e. pattern and action) can be presented to `awk` from a file with `awk -f file [filenames...]`
@@ -281,6 +279,36 @@ According to The Unix Programming Guide (pg 26):
   - Pattern matching: filter on values in a given field, i.e. filtering on values in column 2 would be: `awk '$2 ~ /pattern/' [filenames...]`
   - BEGIN and END parameters can be used to initate variables, print headings, set field separators; or complete actions after the last line has been processed, respectively.
   - Variables are defined by being used, and initialised to zero by default.
+
+- Git
+  - The 'object store' is a database that holds four kinds of items: _blobs_, _trees_, _commits_ and _tags_.
+    - _Blobs_ are a string of bytes, represented as a whole, containing the files complete contents.
+    - _Trees_ are the entire hierarchy of tree and blob objects. The complete state of the repository content at one point in time. A snapshot of a particular directory's content, including that of all directories beneath it.
+    - _Commits_ are the fundamental unit of change in Git. A snapshot of the entire repository content. Consists of a pointer to a _tree_, context about the commit (i.e. authour, committer), and a list of zero or more other commit objects, called the parents of this commit - when a commit has more than one parent, this indicates a "merge".
+    - _Tags_ distinguish a particular commit by giving it a human-readable name, usually identifying a particular software release.
+  - Branches:
+    - Defined as the collection of all commits in the graph that are reachable from the tip by following the parent backward along the history.
+    - When you change some files and add a new commit containing the changes, the branch name advances to the new commit, which in turn points to the old commit as its sole parent. In other words, Git adds the new commit to the end of the branch using the commit's parent pointer, and advances the branch ref to the new commit.
+    - Deleting a branch does not delete any commits. You can still access abandoned commit IDs by using the reflog `git log -g`.
+    - Since a branch is defined as the set of all commits that contributed content to the latest commit, `git log --first-parent` shows only the history of "this" branch.
+  - The Index:
+    - The index is the implicit source of content for a normal commit, separate from both your working tree and any commit.
+    - You need to "stage" a changed file in the index with `git add` in order for it to be part of the next commit.
+    - `git diff` (with arguments) shows the differences between your working tree and the index (rather than the current commit). The idea is that `git diff` shows changes not yet staged for commit.
+    - `git ls-files` shows the current content of the index.
+  - Merging:
+    - Git records the fact of a merge with a "merge commit": a commit having more than one parent.
+  - Push and pull:
+    - _Fast forward update_ is when one ref is simply moved forward along the branch to catch up with the other.
+  - Configuration:
+    - Your global personal Git configuration is in `~/.gitconfig`; local Git configuration is in `.git/config`
+    - `git init` creates a repository in the current directory.
+    - Set parameters with `git config` rathern than editing the above file, i.e. `git config --{local,global,system} parameter value`. If you give this command when your current directory is inside a Git repository, it implies `--local` 
+  - Repositories retain references to original repositories, called a "remote". If the original repository contains two branches named `master` and `topic`, their remote-tracking branches in your clone appear qualified with the name of the remote, i.e. `origin/master` and `origin/topic`.
+  - 'Content based addressing' is used to assign object identifers based on an object's contents. Object identifiers are hashes of a arbitrary block of data.
+  - Git uses 'refs' to name things (named pointers), including commits, branches and tags. A _simple ref_ points directly to an object ID (usually a commit or tag) or a _symbolic ref_ points to another ref.
+    - `git show-ref` displays refs and the objects to which they refer.
+    - The special ref HEAD determines what branch you are on.
 
 # Useful Websites
 
