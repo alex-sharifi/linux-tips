@@ -297,7 +297,13 @@ According to The Unix Programming Guide (pg 26):
     - `git diff` (with arguments) shows the differences between your working tree and the index (rather than the current commit). The idea is that `git diff` shows changes not yet staged for commit.
     - `git ls-files` shows the current content of the index.
   - Merging:
-    - Git records the fact of a merge with a "merge commit": a commit having more than one parent.
+    - Git records the fact of a merge with a "merge commit": a commit having more than one parent
+    - Generally you want a merge to point out a substantive combination of two lines of development. Too many merges creates a commit graph that is hard to read.
+    - `git pull --rebase` produces a linear history instead of a "merge bubble".
+  - Editing history with rebase:
+    - Since commits are immutable, rebasing entails creating a new commit with the same changesets and metadata (author, committer, timestamps, etc). We call this "replaying" commits.
+    - The most general form of the rebase command is `git rebase [--onto newbase] [upstream] [branch]`, i.e. `git rebase origin/master dev-branch`. `[branch]` is HEAD by default; the `--onto` option "rebases" onto a particular commit.
+    - This method is generally to avoid performing a merge.
   - Push and pull:
     - _Fast forward update_ is when one ref is simply moved forward along the branch to catch up with the other.
   - Configuration:
